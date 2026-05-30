@@ -11,14 +11,16 @@ export default function App() {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<string>('');
   const [isUiVisible, setIsUiVisible] = useState(true);
-  const [isShuffleMode, setIsShuffleMode] = useState(false);
   const [isPresetsDrawerOpen, setIsPresetsDrawerOpen] = useState(false);
   const [audioError, setAudioError] = useState<string | null>(null);
+  const [songName, setSongName] = useState('Arctic Monkeys - Do I Wanna Know?');
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const idleTimerRef = useRef<number | null>(null);
-  const shuffleTimerRef = useRef<number | null>(null);
   const activePresetRef = useRef<HTMLButtonElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Initialize visualizer manager presets
   useEffect(() => {
@@ -109,26 +111,44 @@ export default function App() {
     setActivePreset(presetName);
   };
 
-  // Preset Shuffle logic
-  useEffect(() => {
-    if (isShuffleMode) {
-      shuffleTimerRef.current = window.setInterval(() => {
-        if (presets.length > 0) {
-          const nextPreset = presets[Math.floor(Math.random() * presets.length)];
-          visualizerManager.loadPreset(nextPreset, 2.0); // Smooth 2.0s crossfade
-          setActivePreset(nextPreset);
-        }
-      }, 15000); // Shuffle preset every 15 seconds
-    } else {
-      if (shuffleTimerRef.current) {
-        clearInterval(shuffleTimerRef.current);
-      }
+  // Handle seek in song
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const time = parseFloat(e.target.value);
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+      setCurrentTime(time);
     }
+  };
 
-    return () => {
-      if (shuffleTimerRef.current) clearInterval(shuffleTimerRef.current);
-    };
-  }, [isShuffleMode, presets]);
+  // Handle local song file upload
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && audioRef.current) {
+      const fileUrl = URL.createObjectURL(file);
+      setSongName(file.name.replace(/\.[^/.]+$/, '')); // Strip extension
+      audioRef.current.src = fileUrl;
+      setAudioError(null);
+      
+      // Setup and play the loaded song
+      visualizerManager.connectAudioElement(audioRef.current);
+      audioRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+          setupAudioRouting('file');
+        })
+        .catch((err: any) => {
+          console.error('Play failed:', err);
+          setAudioError(`Play failed: ${err.message || err}`);
+        });
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    if (isNaN(seconds)) return '00:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // Auto-hide HUD on mouse inactivity (pure immersion)
   useEffect(() => {
@@ -179,12 +199,36 @@ export default function App() {
         ref={audioRef}
         src="/Arctic Monkeys - Do I Wanna Know (Official Video).mp3"
         onEnded={() => setIsPlaying(false)}
+        onTimeUpdate={() => {
+          if (audioRef.current) {
+            setCurrentTime(audioRef.current.currentTime);
+          }
+        }}
+        onDurationChange={() => {
+          if (audioRef.current) {
+            setDuration(audioRef.current.duration);
+          }
+        }}
+        onLoadedMetadata={() => {
+          if (audioRef.current) {
+            setDuration(audioRef.current.duration);
+          }
+        }}
         onError={(e) => {
           const err = audioRef.current?.error;
           const msg = err ? `Code ${err.code}: ${err.message || 'Unknown media error'}` : 'Audio load error';
           console.error('Audio element error:', err);
           setAudioError(msg);
         }}
+      />
+
+      {/* Hidden File Input for Custom Song Selection */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="audio/*"
+        onChange={handleFileSelect}
+        style={{ display: 'none' }}
       />
 
       {/* Fullscreen Decoupled Three.js WebGL / Butterchurn Canvas */}
@@ -293,12 +337,46 @@ export default function App() {
         <div
           style={{
             display: 'flex',
-            justifyContent: 'center',
+            flexDirection: 'column',
             alignItems: 'center',
+            gap: '16px',
             pointerEvents: 'auto',
             width: '100%',
           }}
         >
+          {/* Custom scrubbable audio progress bar */}
+          {sourceType === 'file' && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                width: '600px',
+                maxWidth: '90%',
+                padding: '10px 20px',
+                background: 'rgba(18, 18, 18, 0.65)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '20px',
+                backdropFilter: 'blur(20px)',
+                boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+              }}
+            >
+              <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', minWidth: '35px', textAlign: 'right', fontFamily: 'Inter' }}>
+                {formatTime(currentTime)}
+              </span>
+              <input
+                type="range"
+                min={0}
+                max={duration || 100}
+                value={currentTime}
+                onChange={handleSeek}
+                className="progress-slider"
+              />
+              <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)', minWidth: '35px', fontFamily: 'Inter' }}>
+                {formatTime(duration)}
+              </span>
+            </div>
+          )}
           {/* Main Controls Row */}
           <div
             style={{
@@ -392,11 +470,35 @@ export default function App() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: '220px' }}>
               {sourceType === 'file' ? (
                 <>
-                  <span style={{ fontSize: '14px', fontWeight: 600, color: '#fff' }}>
-                    Arctic Monkeys - Do I Wanna Know?
+                  <span
+                    onClick={() => fileInputRef.current?.click()}
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#fff',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#00f2fe';
+                      e.currentTarget.style.textShadow = '0 0 8px rgba(0,242,254,0.5)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = '#fff';
+                      e.currentTarget.style.textShadow = 'none';
+                    }}
+                    title="Click to load a custom audio file"
+                  >
+                    {songName}
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>
+                      <path d="M12 5v14M5 12h14"/>
+                    </svg>
                   </span>
                   <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>
-                    Local Audio File Source
+                    Local Audio File Source (Click to change)
                   </span>
                 </>
               ) : (
@@ -474,41 +576,7 @@ export default function App() {
               </button>
             </div>
 
-            {/* Shuffle Mode Toggle */}
-            <button
-              onClick={() => setIsShuffleMode(!isShuffleMode)}
-              style={{
-                background: isShuffleMode ? 'rgba(0, 242, 254, 0.15)' : 'transparent',
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: isShuffleMode ? '#00f2fe' : '#fff',
-                padding: '10px 18px',
-                borderRadius: '20px',
-                cursor: 'pointer',
-                fontSize: '13px',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#00f2fe';
-                e.currentTarget.style.transform = 'scale(1.03)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = isShuffleMode ? '#00f2fe' : 'rgba(255,255,255,0.1)';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="16 3 21 3 21 8" />
-                <line x1="4" y1="20" x2="21" y2="3" />
-                <polyline points="21 16 21 21 16 21" />
-                <line x1="15" y1="15" x2="21" y2="21" />
-                <line x1="4" y1="4" x2="9" y2="9" />
-              </svg>
-              <span>{isShuffleMode ? 'Auto Shuffle ON' : 'Shuffle'}</span>
-            </button>
+
           </div>
         </div>
       </div>
