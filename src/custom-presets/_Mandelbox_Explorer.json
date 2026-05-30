@@ -1,7 +1,7 @@
 {
   "baseVals": {
     "rating": 5,
-    "decay": 0.95,
+    "decay": 0.96,
     "echo_zoom": 1.0,
     "echo_alpha": 0.0,
     "wrap": 1,
@@ -23,19 +23,19 @@
         "textured": 0,
         "x": 0.5,
         "y": 0.5,
-        "rad": 0.12,
+        "rad": 0.15,
         "r": 0.0,
         "g": 0.8,
         "b": 1.0,
-        "a": 0.6,
+        "a": 0.5,
         "r2": 0.0,
-        "g2": 0.1,
-        "b2": 0.4,
+        "g2": 0.2,
+        "b2": 0.6,
         "a2": 0.0,
         "border_a": 0.0
       },
       "init_eqs_str": "",
-      "frame_eqs_str": "a.rad = 0.05 + a.bass_att * 0.05; a.x = 0.5 + Math.sin(a.time * 0.4) * 0.12; a.y = 0.5 + Math.cos(a.time * 0.6) * 0.12; a.r = 0.5 + 0.5 * Math.sin(a.time * 0.8); a.g = 0.5 + 0.5 * Math.sin(a.time * 1.1); a.b = 0.5 + 0.5 * Math.sin(a.time * 1.3);"
+      "frame_eqs_str": "a.rad = 0.06 + a.bass_att * 0.07; a.x = 0.5 + Math.sin(a.time * 0.5) * 0.15; a.y = 0.5 + Math.cos(a.time * 0.7) * 0.15; a.r = 0.5 + 0.5 * Math.sin(a.time); a.g = 0.5 + 0.5 * Math.sin(a.time * 1.2); a.b = 0.5 + 0.5 * Math.sin(a.time * 1.4);"
     },
     {
       "baseVals": {
@@ -45,20 +45,20 @@
         "thickOutline": 1,
         "x": 0.5,
         "y": 0.5,
-        "rad": 0.2,
+        "rad": 0.22,
         "ang": 0.785,
         "r": 1.0,
-        "g": 0.4,
+        "g": 0.5,
         "b": 0.0,
-        "a": 0.3,
-        "r2": 0.4,
+        "a": 0.4,
+        "r2": 0.5,
         "g2": 0.0,
-        "b2": 0.4,
+        "b2": 0.5,
         "a2": 0.0,
         "border_a": 0.0
       },
       "init_eqs_str": "",
-      "frame_eqs_str": "a.ang = a.time * 0.3; a.rad = 0.1 + a.mid_att * 0.05; a.x = 0.5 - Math.sin(a.time * 0.25) * 0.15; a.y = 0.5 - Math.cos(a.time * 0.4) * 0.15;"
+      "frame_eqs_str": "a.ang = a.time * 0.3; a.rad = 0.08 + a.mid_att * 0.05; a.x = 0.5 - Math.sin(a.time * 0.3) * 0.18; a.y = 0.5 - Math.cos(a.time * 0.5) * 0.18;"
     },
     {
       "baseVals": {
@@ -83,7 +83,7 @@
       },
       "init_eqs_str": "",
       "frame_eqs_str": "",
-      "point_eqs_str": "a.angle = a.sample * 6.28 + a.time * 0.4; a.dist = 0.2 + a.value1 * 0.1 * a.bass_att; a.x = 0.5 + Math.sin(a.angle) * a.dist; a.y = 0.5 + Math.cos(a.angle) * a.dist; a.r = 0.0; a.g = 0.8; a.b = 1.0; a.a = 0.4;"
+      "point_eqs_str": "a.angle = a.sample * 6.28 + a.time * 0.5; a.dist = 0.22 + a.value1 * 0.12 * a.bass_att; a.x = 0.5 + Math.sin(a.angle) * a.dist; a.y = 0.5 + Math.cos(a.angle) * a.dist; a.r = 0.0; a.g = 0.9; a.b = 1.0; a.a = 0.4;"
     },
     {
       "baseVals": {
@@ -96,7 +96,7 @@
       },
       "init_eqs_str": "",
       "frame_eqs_str": "",
-      "point_eqs_str": "a.angle = a.sample * 6.28 - a.time * 0.2; a.dist = 0.1 + a.value2 * 0.08 * a.mid_att; a.x = 0.5 + Math.sin(a.angle) * a.dist; a.y = 0.5 + Math.cos(a.angle) * a.dist; a.r = 1.0; a.g = 0.2; a.b = 0.7; a.a = 0.3;"
+      "point_eqs_str": "a.angle = a.sample * 6.28 - a.time * 0.3; a.dist = 0.12 + a.value2 * 0.1 * a.mid_att; a.x = 0.5 + Math.sin(a.angle) * a.dist; a.y = 0.5 + Math.cos(a.angle) * a.dist; a.r = 1.0; a.g = 0.3; a.b = 0.8; a.a = 0.3;"
     },
     {
       "baseVals": {
@@ -109,10 +109,10 @@
       }
     }
   ],
-  "init_eqs_str": "a.zoom_time=0;a.x_focus=0;a.y_focus=0;a.vol_avg=1;a.basstime=0;a.q1=0;a.q2=0;a.q3=0;a.q4=0;a.q5=0;a.q6=0;a.q7=0;a.q8=0;",
-  "frame_eqs_str": "a.vol = (a.bass + a.mid + a.treb) * 0.33; a.vol_avg = a.vol_avg * 0.98 + a.vol * 0.02; a.zoom_time += (0.012 + a.bass * 0.015) * 0.55; a.q1 = a.zoom_time; a.x_focus = -0.7 + Math.sin(a.time * 0.05) * 0.05; a.y_focus = 0.27015 + Math.cos(a.time * 0.07) * 0.03; a.q2 = a.x_focus; a.q3 = a.y_focus; a.q4 = -0.745 + Math.sin(a.time * 0.03) * 0.08 + a.mid_att * 0.01; a.q5 = 0.113 + Math.cos(a.time * 0.04) * 0.06 + a.bass_att * 0.01; a.q6 = Math.sin(a.time * 0.1) * 0.5 + 0.5; a.q7 = Math.cos(a.time * 0.14) * 0.5 + 0.5; a.q8 = Math.sin(a.time * 0.25) * 0.5 + 0.5;",
+  "init_eqs_str": "a.vol_avg=1;a.zoom_accum=0;a.q1=0;a.q2=0;a.q3=0;a.q6=0;a.q7=0;a.q8=0;",
+  "frame_eqs_str": "a.vol = (a.bass + a.mid + a.treb) * 0.33; a.vol_avg = a.vol_avg * 0.98 + a.vol * 0.02; a.q1 = (a.bass_att - a.vol_avg) * 0.15; a.q2 = (a.mid_att - a.vol_avg) * 0.2; a.q3 = 0.0035 + Math.sin(a.time * 0.2) * 0.001; a.q6 = Math.sin(a.time * 0.12) * 0.5 + 0.5; a.q7 = Math.cos(a.time * 0.16) * 0.5 + 0.5; a.q8 = Math.sin(a.time * 0.22) * 0.5 + 0.5;",
   "pixel_eqs_str": "",
-  "warp": " shader_body { float t = q1; float period = 4.0; float t1 = mod(t, period); float t2 = mod(t + period * 0.5, period); float zoom1 = exp(-t1); float zoom2 = exp(-t2); vec2 focus = vec2(q2, q3); vec2 c = vec2(q4, q5); vec2 z1 = (uv - 0.5) * 2.5 * zoom1 + focus; float iter1 = 0.0; for (int i = 0; i < 40; i++) { if (dot(z1, z1) > 4.0) break; float temp = z1.x * z1.x - z1.y * z1.y + c.x; z1.y = 2.0 * z1.x * z1.y + c.y; z1.x = temp; iter1 += 1.0; } float nu1 = 0.0; if (iter1 < 40.0) { float log_zn = log(dot(z1, z1)) / 2.0; float nu_val = log(log_zn / log(2.0)) / log(2.0); nu1 = iter1 + 1.0 - nu_val; } vec3 col1 = vec3(0.0); if (iter1 < 40.0) { col1 = 0.5 + 0.5 * cos(3.0 + nu1 * 0.25 + vec3(0.0, 0.6, 1.0)); } vec2 z2 = (uv - 0.5) * 2.5 * zoom2 + focus; float iter2 = 0.0; for (int i = 0; i < 40; i++) { if (dot(z2, z2) > 4.0) break; float temp = z2.x * z2.x - z2.y * z2.y + c.x; z2.y = 2.0 * z2.x * z2.y + c.y; z2.x = temp; iter2 += 1.0; } float nu2 = 0.0; if (iter2 < 40.0) { float log_zn = log(dot(z2, z2)) / 2.0; float nu_val = log(log_zn / log(2.0)) / log(2.0); nu2 = iter2 + 1.0 - nu_val; } vec3 col2 = vec3(0.0); if (iter2 < 40.0) { col2 = 0.5 + 0.5 * cos(3.0 + nu2 * 0.25 + vec3(0.0, 0.6, 1.0)); } float blend = abs(mod(t / (period * 0.5), 2.0) - 1.0); vec3 col = mix(col1, col2, blend); vec3 prev = texture(sampler_main, uv).xyz * 0.45; ret = col + prev; }",
-  "comp": " shader_body { vec3 main_col = texture(sampler_main, uv).xyz; vec3 blur_col = (texture(sampler_blur1, uv).xyz * scale1) + bias1; vec3 col = main_col + blur_col * 0.6; vec3 palette = vec3(q6, q7, q8); col = col * (vec3(1.0) + palette * 0.3); col = pow(col, vec3(1.3)); ret = col; }",
+  "warp": " shader_body { vec3 main = texture(sampler_main, uv).xyz; vec3 blur = (texture(sampler_blur1, uv).xyz * scale1) + bias1; vec3 diff = main - blur; vec3 next = main + diff * 0.18 - vec3(q3, q3 * 0.7, q3 * 0.85); float swirl = 0.02 + q2 * 0.05; vec2 uv_warp = uv + vec2(diff.y - diff.z, diff.z - diff.x) * swirl; float zoom = 0.99 + q1 * 0.05; vec2 uv_zoom = (uv_warp - 0.5) * zoom + 0.5; uv_zoom.x += sin(time * 0.1) * 0.001; uv_zoom.y += cos(time * 0.13) * 0.001; uv_zoom = clamp(uv_zoom, 0.005, 0.995); vec3 col = texture(sampler_main, uv_zoom).xyz * 0.94 + next * 0.06; float r_noise = fract(sin(dot(uv + vec2(time * 0.01), vec2(12.9898, 78.233))) * 43758.5453); col += vec3(r_noise) * 0.0018; ret = col; }",
+  "comp": " shader_body { vec3 main = texture(sampler_main, uv).xyz; vec3 blur1 = (texture(sampler_blur1, uv).xyz * scale1) + bias1; vec3 blur2 = (texture(sampler_blur2, uv).xyz * scale2) + bias2; vec3 edge = abs(main - blur1) * 2.5; vec3 col = main * 1.2 + edge * 0.8 + blur2 * 0.4; vec3 palette = vec3(q6, q7, q8); col = col * (vec3(1.0) + palette * 0.3); col = pow(col, vec3(1.35)); ret = col; }",
   "name": "_Mandelbox_Explorer"
 }
