@@ -1,0 +1,41 @@
+{
+  "name": "_Psychodelic_organic",
+  "baseVals": {
+    "rating": 5,
+    "decay": 0.98,
+    "echo_zoom": 1.05,
+    "echo_alpha": 0.5,
+    "echo_orient": 3,
+    "wave_mode": 6,
+    "wave_dots": 1,
+    "wave_thick": 1,
+    "modwavealphabyvolume": 1,
+    "wrap": 1,
+    "wave_scale": 1.5
+  },
+  "shapes": [
+    {
+      "baseVals": {
+        "enabled": 1,
+        "sides": 100,
+        "rad": 0.4,
+        "r": 1,
+        "g": 0.5,
+        "b": 0,
+        "a": 0.5,
+        "r2": 0,
+        "g2": 0.5,
+        "b2": 1,
+        "a2": 0.1,
+        "border_a": 0,
+        "additive": 1
+      },
+      "init_eqs_str": "",
+      "frame_eqs_str": "a.rad+=0.2*a.bass;a.r=0.5+0.5*Math.sin(a.time*0.7);a.g=0.5+0.5*Math.sin(a.time*0.5);a.b=0.5+0.5*Math.sin(a.time*0.3);a.x=0.5+0.2*Math.sin(a.time);a.y=0.5+0.2*Math.cos(a.time);"
+    }
+  ],
+  "waves": [],
+  "init_eqs_str": "",
+  "frame_eqs_str": "a.wave_r=0.5+0.5*Math.sin(a.time*1.3);a.wave_g=0.5+0.5*Math.sin(a.time*1.2);a.wave_b=0.5+0.5*Math.sin(a.time*1.1);a.zoom=1.0+0.05*a.bass;a.rot=0.01*Math.sin(a.time*0.5);",
+  "pixel_eqs_str": "a.rot+=0.05*Math.sin(a.rad*12-a.time*2);a.zoom+=0.02*Math.cos(a.ang*4+a.time);"
+}
