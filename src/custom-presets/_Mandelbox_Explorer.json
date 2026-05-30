@@ -1,0 +1,118 @@
+{
+  "baseVals": {
+    "rating": 5,
+    "decay": 0.96,
+    "echo_zoom": 1.0,
+    "echo_alpha": 0.0,
+    "wrap": 1,
+    "darken_center": 0,
+    "wave_a": 0.01,
+    "zoom": 1.0,
+    "rot": 0.0,
+    "warp": 0.0,
+    "ob_size": 0.0,
+    "ib_size": 0.0,
+    "mv_a": 0.0
+  },
+  "shapes": [
+    {
+      "baseVals": {
+        "enabled": 1,
+        "sides": 100,
+        "additive": 1,
+        "textured": 0,
+        "x": 0.5,
+        "y": 0.5,
+        "rad": 0.15,
+        "r": 0.1,
+        "g": 0.8,
+        "b": 1.0,
+        "a": 0.8,
+        "r2": 0.0,
+        "g2": 0.2,
+        "b2": 0.5,
+        "a2": 0.0,
+        "border_a": 0.0
+      },
+      "init_eqs_str": "",
+      "frame_eqs_str": "a.rad = 0.08 + a.bass_att * 0.08; a.x = 0.5 + Math.sin(a.time * 0.5) * 0.15; a.y = 0.5 + Math.cos(a.time * 0.7) * 0.15; a.r = 0.5 + 0.5 * Math.sin(a.time); a.g = 0.5 + 0.5 * Math.sin(a.time * 1.2); a.b = 0.5 + 0.5 * Math.sin(a.time * 1.4);"
+    },
+    {
+      "baseVals": {
+        "enabled": 1,
+        "sides": 4,
+        "additive": 1,
+        "thickOutline": 1,
+        "x": 0.5,
+        "y": 0.5,
+        "rad": 0.25,
+        "ang": 0.785,
+        "r": 1.0,
+        "g": 0.5,
+        "b": 0.0,
+        "a": 0.4,
+        "r2": 0.5,
+        "g2": 0.0,
+        "b2": 0.5,
+        "a2": 0.0,
+        "border_a": 0.0
+      },
+      "init_eqs_str": "",
+      "frame_eqs_str": "a.ang = a.time * 0.4; a.rad = 0.12 + a.mid_att * 0.06; a.x = 0.5 - Math.sin(a.time * 0.3) * 0.2; a.y = 0.5 - Math.cos(a.time * 0.5) * 0.2;"
+    },
+    {
+      "baseVals": {
+        "enabled": 0
+      }
+    },
+    {
+      "baseVals": {
+        "enabled": 0
+      }
+    }
+  ],
+  "waves": [
+    {
+      "baseVals": {
+        "enabled": 1,
+        "samples": 512,
+        "thick": 1,
+        "additive": 1,
+        "scaling": 1.0,
+        "smoothing": 0.5
+      },
+      "init_eqs_str": "a.q1=0;a.q2=0;a.q3=0;",
+      "frame_eqs_str": "",
+      "point_eqs_str": "a.angle = a.sample * 6.28 + a.time * 0.5; a.dist = 0.25 + a.value1 * 0.15 * a.bass_att; a.x = 0.5 + Math.sin(a.angle) * a.dist; a.y = 0.5 + Math.cos(a.angle) * a.dist; a.r = 0.0; a.g = 0.9; a.b = 1.0; a.a = 0.5;"
+    },
+    {
+      "baseVals": {
+        "enabled": 1,
+        "samples": 512,
+        "thick": 1,
+        "additive": 1,
+        "scaling": 1.0,
+        "smoothing": 0.5
+      },
+      "init_eqs_str": "",
+      "frame_eqs_str": "",
+      "point_eqs_str": "a.angle = a.sample * 6.28 - a.time * 0.3; a.dist = 0.15 + a.value2 * 0.12 * a.mid_att; a.x = 0.5 + Math.sin(a.angle) * a.dist; a.y = 0.5 + Math.cos(a.angle) * a.dist; a.r = 1.0; a.g = 0.3; a.b = 0.8; a.a = 0.4;"
+    },
+    {
+      "baseVals": {
+        "enabled": 0
+      }
+    },
+    {
+      "baseVals": {
+        "enabled": 0
+      }
+    }
+  ],
+  "init_eqs_str": "a.zoom_accum=1;a.x_accum=0;a.y_accum=0;a.vol_avg=1;a.basstime=0;a.q1=0;a.q2=0;a.q3=0;a.q4=0;a.q5=0;a.q6=0;a.q7=0;a.q8=0;",
+  "frame_eqs_str": "a.vol = (a.bass + a.mid + a.treb) * 0.33; a.vol_avg = a.vol_avg * 0.98 + a.vol * 0.02; a.zoom_accum += (0.01 + a.bass * 0.015) * 0.3; a.basstime += a.bass * 0.02; a.x_accum += Math.sin(a.time * 0.15 + a.mid * 0.1) * 0.003; a.y_accum += Math.cos(a.time * 0.22 + a.treb * 0.08) * 0.003; a.q1 = a.zoom_accum; a.q2 = a.x_accum; a.q3 = a.y_accum; a.q4 = 1.8 + Math.sin(a.time * 0.4) * 0.2 + a.mid_att * 0.15; a.q5 = 0.5 + a.bass_att * 0.1; a.q6 = Math.sin(a.time * 0.1) * 0.5 + 0.5; a.q7 = Math.cos(a.time * 0.14) * 0.5 + 0.5; a.q8 = Math.sin(a.time * 0.25) * 0.5 + 0.5;",
+  "pixel_eqs_str": "",
+  "warp": " shader_body { vec2 uv_zoom = (uv - 0.5) * exp(-mod(q1, 4.0)) + vec2(q2, q3); vec2 z = uv_zoom * 2.0; vec2 c = z; float scale = q4; float min_rad = q5; for (int i = 0; i < 4; i++) { z = clamp(z, -1.0, 1.0) * 2.0 - z; float r2 = dot(z, z); if (r2 < min_rad) { z = z * (1.0 / min_rad); } else if (r2 < 1.0) { z = z * (1.0 / r2); } z = z * scale + c; } vec2 uv_folded = (z * 0.15) + 0.5; uv_folded = clamp(uv_folded, 0.005, 0.995); vec3 col = texture(sampler_main, uv_folded).xyz; col *= 0.97; col.r += 0.01 * texture(sampler_main, uv_folded + vec2(0.002, 0.0)).r; col.b += 0.01 * texture(sampler_main, uv_folded - vec2(0.002, 0.0)).b; ret = col; }",
+  "comp": " shader_body { vec3 main_col = texture(sampler_main, uv).xyz; vec3 blur_col = (texture(sampler_blur1, uv).xyz * scale1) + bias1; vec3 col = main_col + blur_col * 1.5; vec3 palette = vec3(q6, q7, q8); col = mix(col, col * palette * 2.0, vec3(0.35)); col = pow(col, vec3(1.2)); ret = col; }",
+  "name": "_Mandelbox_Explorer"
+}

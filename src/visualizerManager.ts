@@ -1,6 +1,7 @@
 import butterchurn from 'butterchurn';
 import butterchurnPresets from 'butterchurn-presets';
 import customPsychedelicOrganic from './custom-presets/_Psychodelic_organic.json';
+import customMandelboxExplorer from './custom-presets/_Mandelbox_Explorer.json';
 
 export interface VisualizerPreset {
   name: string;
@@ -40,6 +41,7 @@ class VisualizerManager {
     // Load presets
     this.presets = butterchurnPresets.getPresets();
     this.presets['_Psychodelic_organic'] = customPsychedelicOrganic;
+    this.presets['_Mandelbox_Explorer'] = customMandelboxExplorer;
     const presetNames = Object.keys(this.presets);
     if (presetNames.length > 0) {
       // Pick a random default preset
