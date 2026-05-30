@@ -16,6 +16,14 @@ export default function App() {
   const [songName, setSongName] = useState('Arctic Monkeys - Do I Wanna Know?');
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    const saved = localStorage.getItem('visualizer-favorites');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('visualizer-favorites', JSON.stringify(favorites));
+  }, [favorites]);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const idleTimerRef = useRef<number | null>(null);
@@ -111,6 +119,16 @@ export default function App() {
     setActivePreset(presetName);
   };
 
+  // Toggle preset favorite status
+  const toggleFavorite = (presetName: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Avoid choosing the preset when starring it
+    setFavorites((prev) =>
+      prev.includes(presetName)
+        ? prev.filter((p) => p !== presetName)
+        : [...prev, presetName]
+    );
+  };
+
   // Handle seek in song
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const time = parseFloat(e.target.value);
@@ -191,6 +209,14 @@ export default function App() {
   const filteredPresets = presets.filter((p) =>
     p.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const sortedPresets = [...filteredPresets].sort((a, b) => {
+    const aFav = favorites.includes(a);
+    const bFav = favorites.includes(b);
+    if (aFav && !bFav) return -1;
+    if (!aFav && bFav) return 1;
+    return a.localeCompare(b); // Alphabetical fallback
+  });
 
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#000', overflow: 'hidden' }}>
@@ -648,15 +674,20 @@ export default function App() {
             paddingRight: '4px',
           }}
         >
-          {filteredPresets.length > 0 ? (
-            filteredPresets.map((p) => {
+          {sortedPresets.length > 0 ? (
+            sortedPresets.map((p) => {
               const isPresetSelected = p === activePreset;
+              const isFav = favorites.includes(p);
               return (
                 <button
                   key={p}
                   ref={isPresetSelected ? activePresetRef : null}
                   onClick={() => handlePresetSelect(p)}
                   style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '12px',
                     textAlign: 'left',
                     background: isPresetSelected ? 'rgba(0, 242, 254, 0.15)' : 'transparent',
                     border: '1px solid',
@@ -684,7 +715,37 @@ export default function App() {
                     }
                   }}
                 >
-                  {p}
+                  <span style={{ flex: 1 }}>{p}</span>
+                  <span
+                    onClick={(e) => toggleFavorite(p, e)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      padding: '4px',
+                      borderRadius: '50%',
+                      transition: 'all 0.2s ease',
+                      color: isFav ? '#ffd700' : 'rgba(255, 255, 255, 0.2)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.stopPropagation();
+                      e.currentTarget.style.color = '#ffd700';
+                      e.currentTarget.style.background = 'rgba(255, 215, 0, 0.1)';
+                      e.currentTarget.style.transform = 'scale(1.2)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.stopPropagation();
+                      e.currentTarget.style.color = isFav ? '#ffd700' : 'rgba(255, 255, 255, 0.2)';
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                    title={isFav ? "Remove from favorites" : "Add to favorites"}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill={isFav ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                  </span>
                 </button>
               );
             })
