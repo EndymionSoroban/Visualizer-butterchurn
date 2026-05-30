@@ -1,8 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { visualizerManager } from './visualizerManager';
 
 export default function AudioVisualizer() {
@@ -11,7 +8,6 @@ export default function AudioVisualizer() {
 
   // References to WebGL resources for safe cleanup
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const composerRef = useRef<EffectComposer | null>(null);
   const textureRef = useRef<THREE.CanvasTexture | null>(null);
   const geometryRef = useRef<THREE.PlaneGeometry | null>(null);
   const materialRef = useRef<THREE.MeshBasicMaterial | null>(null);
@@ -57,19 +53,7 @@ export default function AudioVisualizer() {
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    // 4. Setup Post-Processing (Bloom Filter)
-    const composer = new EffectComposer(renderer);
-    const renderPass = new RenderPass(scene, camera);
-    composer.addPass(renderPass);
-
-    const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(width, height),
-      1.6, // Bloom Intensity (psychedelic, high visual impact)
-      0.35, // Radius
-      0.25 // Threshold (glows respond dynamically)
-    );
-    composer.addPass(bloomPass);
-    composerRef.current = composer;
+    // 4. Setup Post-Processing (Removed)
 
     // 5. The Render Loop
     const renderLoop = () => {
@@ -83,10 +67,8 @@ export default function AudioVisualizer() {
           textureRef.current.needsUpdate = true;
         }
 
-        // Apply UnrealBloomPass render pipeline
-        if (composerRef.current) {
-          composerRef.current.render();
-        }
+        // Render Three.js scene
+        renderer.render(scene, camera);
       }
       animationFrameIdRef.current = requestAnimationFrame(renderLoop);
     };
@@ -100,9 +82,6 @@ export default function AudioVisualizer() {
 
       if (rendererRef.current) {
         rendererRef.current.setSize(w, h);
-      }
-      if (composerRef.current) {
-        composerRef.current.setSize(w, h);
       }
       visualizerManager.resize(w, h);
     };
@@ -133,7 +112,6 @@ export default function AudioVisualizer() {
         }
       }
       
-      composerRef.current = null;
       rendererRef.current = null;
       textureRef.current = null;
       geometryRef.current = null;
