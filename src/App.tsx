@@ -256,6 +256,19 @@ export default function App() {
               alignItems: 'center',
               gap: '8px',
               boxShadow: '0 4px 30px rgba(0, 0, 0, 0.2)',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
+            }}
+            onClick={() => setIsPresetsDrawerOpen(!isPresetsDrawerOpen)}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#00f2fe';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+              e.currentTarget.style.transform = 'scale(1.03)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+              e.currentTarget.style.transform = 'scale(1)';
             }}
           >
             <span style={{ display: 'inline-block', width: '8px', height: '8px', background: '#00f2fe', borderRadius: '50%', boxShadow: '0 0 8px #00f2fe' }} />
@@ -489,20 +502,20 @@ export default function App() {
         style={{
           position: 'absolute',
           top: 0,
-          left: isPresetsDrawerOpen ? 0 : '-380px',
+          right: isPresetsDrawerOpen ? 0 : '-380px',
           width: '340px',
           height: '100%',
           background: 'rgba(10, 10, 10, 0.75)',
-          borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+          borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
           backdropFilter: 'blur(25px)',
           padding: '24px',
           display: 'flex',
           flexDirection: 'column',
           gap: '20px',
-          transition: 'left 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
+          transition: 'right 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
           zIndex: 20,
           color: 'white',
-          boxShadow: '8px 0 32px rgba(0,0,0,0.5)',
+          boxShadow: '-8px 0 32px rgba(0,0,0,0.5)',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

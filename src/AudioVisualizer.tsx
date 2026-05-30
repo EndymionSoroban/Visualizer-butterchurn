@@ -21,7 +21,6 @@ export default function AudioVisualizer() {
       return;
     }
 
-    // Since we removed post-processing, we can just append Butterchurn's canvas directly
     butterchurnCanvas.style.width = '100vw';
     butterchurnCanvas.style.height = '100vh';
     containerRef.current.appendChild(butterchurnCanvas);
