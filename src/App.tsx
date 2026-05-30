@@ -18,6 +18,7 @@ export default function App() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const idleTimerRef = useRef<number | null>(null);
   const shuffleTimerRef = useRef<number | null>(null);
+  const activePresetRef = useRef<HTMLButtonElement | null>(null);
 
   // Initialize visualizer manager presets
   useEffect(() => {
@@ -146,7 +147,6 @@ export default function App() {
     window.addEventListener('keydown', resetIdleTimer);
 
     resetIdleTimer();
-
     return () => {
       window.removeEventListener('mousemove', resetIdleTimer);
       window.removeEventListener('mousedown', resetIdleTimer);
@@ -154,6 +154,19 @@ export default function App() {
       if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
     };
   }, []);
+
+  // Scroll to active preset when the drawer opens or active preset changes
+  useEffect(() => {
+    if (isPresetsDrawerOpen && activePresetRef.current) {
+      const timer = setTimeout(() => {
+        activePresetRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+        });
+      }, 250); // Small delay to let the drawer open transition start/finish
+      return () => clearTimeout(timer);
+    }
+  }, [isPresetsDrawerOpen, activePreset]);
 
   const filteredPresets = presets.filter((p) =>
     p.toLowerCase().includes(searchQuery.toLowerCase())
@@ -502,8 +515,8 @@ export default function App() {
         style={{
           position: 'absolute',
           top: 0,
-          right: isPresetsDrawerOpen ? 0 : '-380px',
-          width: '340px',
+          right: isPresetsDrawerOpen ? 0 : '-420px',
+          width: '380px',
           height: '100%',
           background: 'rgba(10, 10, 10, 0.75)',
           borderLeft: '1px solid rgba(255, 255, 255, 0.08)',
@@ -570,6 +583,7 @@ export default function App() {
               return (
                 <button
                   key={p}
+                  ref={isPresetSelected ? activePresetRef : null}
                   onClick={() => handlePresetSelect(p)}
                   style={{
                     textAlign: 'left',
@@ -581,10 +595,10 @@ export default function App() {
                     borderRadius: '10px',
                     cursor: 'pointer',
                     fontSize: '12px',
+                    lineHeight: '1.4',
                     transition: 'all 0.2s ease',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
+                    whiteSpace: 'normal',
+                    wordBreak: 'break-word',
                   }}
                   onMouseEnter={(e) => {
                     if (!isPresetSelected) {
