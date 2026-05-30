@@ -8,7 +8,6 @@ A standalone, immersive desktop application that brings the authentic MilkDrop/P
 - **Dual Audio Routing**: 
   - **Local MP3 Playback**: Play local audio files directly through the visualizer.
   - **System/Microphone Capture**: Visualize your system audio loopback or live microphone input using `navigator.mediaDevices.getUserMedia`.
-- **Psychedelic Bloom Post-Processing**: Enhances the visualizer with a custom Three.js `UnrealBloomPass` for a stunning neon glow effect.
 - **Glassmorphic UI**: Sleek, modern overlay built with React that auto-hides for pure immersion.
 - **Preset Browser**: Search and seamlessly crossfade between presets.
 - **Auto-Shuffle**: Automatically cycles through random presets every 15 seconds.
