@@ -423,6 +423,9 @@ export default function App() {
                       </option>
                     ))}
                   </select>
+                  <span style={{ fontSize: '9px', color: 'rgba(0, 242, 254, 0.45)', marginTop: '2px', whiteSpace: 'nowrap' }}>
+                    Tip: Use virtual loopback (e.g. BlackHole) for silent desktop capture
+                  </span>
                 </>
               )}
             </div>
