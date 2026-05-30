@@ -29,6 +29,7 @@ export default function App() {
   const idleTimerRef = useRef<number | null>(null);
   const activePresetRef = useRef<HTMLButtonElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Initialize visualizer manager presets
   useEffect(() => {
@@ -122,11 +123,25 @@ export default function App() {
   // Toggle preset favorite status
   const toggleFavorite = (presetName: string, e: React.MouseEvent) => {
     e.stopPropagation(); // Avoid choosing the preset when starring it
+    
+    // Capture current scroll offset
+    const container = scrollContainerRef.current;
+    const oldScrollTop = container ? container.scrollTop : 0;
+
     setFavorites((prev) =>
       prev.includes(presetName)
         ? prev.filter((p) => p !== presetName)
         : [...prev, presetName]
     );
+
+    // Snap the scroll offset right back to prevent visual jumps due to sorting changes
+    if (container) {
+      requestAnimationFrame(() => {
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTop = oldScrollTop;
+        }
+      });
+    }
   };
 
   // Handle seek in song
@@ -665,6 +680,7 @@ export default function App() {
 
         {/* Preset List */}
         <div
+          ref={scrollContainerRef}
           style={{
             flex: 1,
             overflowY: 'auto',
